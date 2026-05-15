@@ -4,7 +4,7 @@
 
 - **João Felipe**
 - **Ryan Lucena**
-- **Guilherme Mendonsa**
+- **Guilherme Mendonça**
 
 ---
 

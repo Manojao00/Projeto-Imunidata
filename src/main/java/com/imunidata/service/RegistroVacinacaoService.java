@@ -6,6 +6,7 @@ import com.opencsv.CSVReader;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import com.opencsv.exceptions.CsvValidationException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -115,49 +116,52 @@ public class RegistroVacinacaoService {
      * Formato esperado: municipio,estado,vacina,dose,quantidadeAplicada,dataRegistro,faixaEtaria
      */
     public List<RegistroVacinacao> carregarDadosCSV(InputStream csvFile) {
-        List<RegistroVacinacao> registros = new ArrayList<>();
+    List<RegistroVacinacao> registros = new ArrayList<>();
 
-        try (CSVReader reader = new CSVReader(new InputStreamReader(csvFile))) {
-            String[] linhas;
-            int contador = 0;
+    try (CSVReader reader = new CSVReader(new InputStreamReader(csvFile))) {
+        String[] linhas;
+        int contador = 0;
 
-            // Pular cabeçalho
-            reader.readNext();
+        // Pular cabeçalho
+        reader.readNext();
 
-            while ((linhas = reader.readNext()) != null) {
-                if (linhas.length < 7) {
-                    log.warn("Linha com dados incompletos ignorada na linha {}", contador);
-                    continue;
-                }
-
-                try {
-                    RegistroVacinacao registro = RegistroVacinacao.builder()
-                            .municipio(linhas[0].trim())
-                            .estado(linhas[1].trim())
-                            .vacina(linhas[2].trim())
-                            .dose(linhas[3].trim())
-                            .quantidadeAplicada(Integer.parseInt(linhas[4].trim()))
-                            .dataRegistro(LocalDate.parse(linhas[5].trim(), DATE_FORMATTER))
-                            .faixaEtaria(linhas[6].trim())
-                            .build();
-
-                    registros.add(registro);
-                    contador++;
-                } catch (Exception e) {
-                    log.error("Erro ao processar linha {}: {}", contador, e.getMessage());
-                }
+        while ((linhas = reader.readNext()) != null) {
+            if (linhas.length < 7) {
+                log.warn("Linha com dados incompletos ignorada na linha {}", contador);
+                continue;
             }
 
-            // Salvar todos os registros no banco
-            List<RegistroVacinacao> registrosSalvos = repository.saveAll(registros);
-            log.info("Foram carregados e salvos {} registros do CSV", registrosSalvos.size());
+            try {
+                RegistroVacinacao registro = RegistroVacinacao.builder()
+                        .municipio(linhas[0].trim())
+                        .estado(linhas[1].trim())
+                        .vacina(linhas[2].trim())
+                        .dose(linhas[3].trim())
+                        .quantidadeAplicada(Integer.parseInt(linhas[4].trim()))
+                        .dataRegistro(LocalDate.parse(linhas[5].trim(), DATE_FORMATTER))
+                        .faixaEtaria(linhas[6].trim())
+                        .build();
 
-            return registrosSalvos;
-        } catch (IOException e) {
-            log.error("Erro ao ler arquivo CSV: {}", e.getMessage());
-            throw new RuntimeException("Erro ao processar arquivo CSV", e);
+                registros.add(registro);
+                contador++;
+            } catch (Exception e) {
+                log.error("Erro ao processar linha {}: {}", contador, e.getMessage());
+            }
         }
+
+        List<RegistroVacinacao> registrosSalvos = repository.saveAll(registros);
+        log.info("Foram carregados e salvos {} registros do CSV", registrosSalvos.size());
+
+        return registrosSalvos;
+
+    } catch (IOException e) {
+        log.error("Erro ao ler arquivo CSV: {}", e.getMessage());
+        throw new RuntimeException("Erro ao processar arquivo CSV", e);
+    } catch (com.opencsv.exceptions.CsvValidationException e) {  // ✅ adicionado
+        log.error("Erro de validação no CSV: {}", e.getMessage());
+        throw new RuntimeException("Arquivo CSV inválido", e);
     }
+}
 
     /**
      * Obter resumo de vacinações por estado

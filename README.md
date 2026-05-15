@@ -1,8 +1,497 @@
 # 🏥 Imunidata - Sistema de Análise de Cobertura Vacinal
 
-## 📋 Visão Geral
+## � Integrantes do Grupo
 
-Imunidata é uma aplicação **Full Stack** (Java Spring Boot + React) desenvolvida para análise e gerenciamento de dados de cobertura vacinal por região e faixa etária. O sistema foi projetado para apoiar a tomada de decisão em secretarias de saúde e unidades de pronto atendimento.
+- **João Felipe**
+- **Ryan Lucena**
+- **Guilherme Mendonsa**
+
+---
+
+## 🎯 Objetivo
+
+O **Imunidata** é um sistema Full Stack desenvolvido para **analisar e gerenciar dados de cobertura vacinal** por região e faixa etária. O sistema resolve o problema de falta de visibilidade sobre o andamento das campanhas de vacinação, permitindo que secretarias de saúde e gestores públicos tomem decisões baseadas em dados reais.
+
+**Problema:** Dificuldade em acompanhar coberturas vacinais por município, estado e tipo de vacina, levando a campanhas ineficientes.
+
+**Solução:** Plataforma integrada que consolida dados de vacinação, permite filtros avançados e visualização de cobertura em tempo real, com integração com a API SI-PNI do Datasus.
+
+---
+
+## 📊 Visão Geral Técnica
+
+Imunidata é uma aplicação **Full Stack** (Java Spring Boot + React) com:
+- ✅ Arquitetura em camadas (Model, Repository, Service, Controller)
+- ✅ Banco de dados H2 com console Web
+- ✅ API REST completa com CRUD
+- ✅ Integração com SI-PNI/Datasus
+- ✅ Frontend React responsivo com filtros em tempo real
+- ✅ Importação de dados CSV
+
+---
+
+## 🏗️ Documentação da API (Backend)
+
+### 📋 Mapeamento de Entidades
+
+#### 1. **RegistroVacinacao** (@Entity)
+
+Representa um registro de vacinação realizada.
+
+| Atributo | Tipo | Descrição |
+|----------|------|-----------|
+| `id` | Long | ID único (chave primária, auto-incrementada) |
+| `municipio` | String | Nome do município onde foi feita a vacinação |
+| `estado` | String | Estado/UF (ex: SP, RJ, MG) |
+| `vacina` | String | Tipo de vacina aplicada (BCG, Gripe, etc) |
+| `dose` | String | Dose aplicada (1ª, 2ª, reforço) |
+| `quantidadeAplicada` | Integer | Quantidade de doses aplicadas |
+| `dataRegistro` | LocalDate | Data do registro da vacinação |
+| `faixaEtaria` | String | Faixa etária da população (0-4, 5-9, 10-14, etc) |
+
+**Exemplo JSON:**
+```json
+{
+  "id": 1,
+  "municipio": "São Paulo",
+  "estado": "SP",
+  "vacina": "BCG",
+  "dose": "1ª",
+  "quantidadeAplicada": 1500,
+  "dataRegistro": "2024-05-15",
+  "faixaEtaria": "0-4"
+}
+```
+
+#### 2. **CoberturavacinadalDTO** (Data Transfer Object)
+
+Representa dados de cobertura vacinal da API SI-PNI.
+
+| Atributo | Tipo | Descrição |
+|----------|------|-----------|
+| `codigoMunicipio` | String | Código IBGE do município |
+| `nomeMunicipio` | String | Nome do município |
+| `estado` | String | Estado/UF |
+| `vacina` | String | Tipo de vacina |
+| `cobertura` | Double | Percentual de cobertura (0-100) |
+| `quantidadeAplicada` | Integer | Quantidade de doses aplicadas |
+| `populacaoAlvo` | Integer | População alvo para vacinação |
+| `ano` | String | Ano do registro |
+| `mes` | String | Mês do registro |
+
+**Exemplo JSON:**
+```json
+{
+  "codigoMunicipio": "3550308",
+  "nomeMunicipio": "São Paulo",
+  "estado": "SP",
+  "vacina": "BCG",
+  "cobertura": 98.5,
+  "quantidadeAplicada": 15000,
+  "populacaoAlvo": 15228,
+  "ano": "2024",
+  "mes": "05"
+}
+```
+
+---
+
+### 🔌 Endpoints (Tabela de Rotas)
+
+#### **Registros de Vacinação**
+
+| Método | Endpoint | Descrição | Request | Response |
+|--------|----------|-----------|---------|----------|
+| `GET` | `/api/registros` | Listar todos os registros | - | Array de RegistroVacinacao |
+| `GET` | `/api/registros/{id}` | Obter registro por ID | - | RegistroVacinacao |
+| `POST` | `/api/registros` | Criar novo registro | RegistroVacinacao | RegistroVacinacao (201) |
+| `PUT` | `/api/registros/{id}` | Atualizar registro | RegistroVacinacao | RegistroVacinacao |
+| `DELETE` | `/api/registros/{id}` | Deletar registro | - | 204 No Content |
+| `GET` | `/api/registros/buscar/vacina?nome=BCG` | Buscar por vacina | - | Array de RegistroVacinacao |
+| `GET` | `/api/registros/buscar/estado?nome=SP` | Buscar por estado | - | Array de RegistroVacinacao |
+| `GET` | `/api/registros/buscar/municipio?nome=São Paulo` | Buscar por município | - | Array de RegistroVacinacao |
+| `GET` | `/api/registros/buscar/faixa-etaria?faixa=0-4` | Buscar por faixa etária | - | Array de RegistroVacinacao |
+| `POST` | `/api/registros/carregar-csv` | Carregar dados CSV | FormData (file) | Array de RegistroVacinacao (201) |
+| `GET` | `/api/registros/resumos/estado` | Resumo por estado | - | Array de RegistroVacinacao |
+
+#### **SI-PNI / Datasus**
+
+| Método | Endpoint | Descrição | Response |
+|--------|----------|-----------|----------|
+| `GET` | `/api/sipni/cobertura/estado?estado=SP` | Cobertura por estado | Array de CoberturavacinadalDTO |
+| `GET` | `/api/sipni/cobertura/municipio?municipio=São Paulo` | Cobertura por município | Array de CoberturavacinadalDTO |
+| `GET` | `/api/sipni/cobertura/vacina?vacina=BCG` | Cobertura por vacina | Array de CoberturavacinadalDTO |
+| `GET` | `/api/sipni/cobertura/periodo?ano=2024&mes=05&estado=SP` | Cobertura em período | Array de CoberturavacinadalDTO |
+| `GET` | `/api/sipni/resumo/estados` | Resumo geral de cobertura | Array de CoberturavacinadalDTO |
+| `GET` | `/api/sipni/estatisticas` | Estatísticas de cobertura | String com média, mín e máx |
+| `GET` | `/api/sipni/health` | Health check | "SI-PNI Service está funcionando normalmente" |
+
+---
+
+### 📝 Exemplos de Requisições
+
+#### Criar um novo registro de vacinação
+
+**Request:**
+```bash
+POST http://localhost:8080/api/registros
+Content-Type: application/json
+
+{
+  "municipio": "Rio de Janeiro",
+  "estado": "RJ",
+  "vacina": "Gripe",
+  "dose": "1ª",
+  "quantidadeAplicada": 2000,
+  "dataRegistro": "2024-05-20",
+  "faixaEtaria": "5-9"
+}
+```
+
+**Response (201 Created):**
+```json
+{
+  "id": 26,
+  "municipio": "Rio de Janeiro",
+  "estado": "RJ",
+  "vacina": "Gripe",
+  "dose": "1ª",
+  "quantidadeAplicada": 2000,
+  "dataRegistro": "2024-05-20",
+  "faixaEtaria": "5-9"
+}
+```
+
+#### Buscar cobertura por estado (SI-PNI)
+
+**Request:**
+```bash
+GET http://localhost:8080/api/sipni/cobertura/estado?estado=SP
+```
+
+**Response (200 OK):**
+```json
+[
+  {
+    "codigoMunicipio": "3550308",
+    "nomeMunicipio": "São Paulo",
+    "estado": "SP",
+    "vacina": "BCG",
+    "cobertura": 98.5,
+    "quantidadeAplicada": 15000,
+    "populacaoAlvo": 15228,
+    "ano": "2024",
+    "mes": "05"
+  },
+  {
+    "codigoMunicipio": "3550308",
+    "nomeMunicipio": "São Paulo",
+    "estado": "SP",
+    "vacina": "Gripe",
+    "cobertura": 95.8,
+    "quantidadeAplicada": 14620,
+    "populacaoAlvo": 15228,
+    "ano": "2024",
+    "mes": "05"
+  }
+]
+```
+
+---
+
+## 🏛️ Diagrama de Arquitetura
+
+### Fluxo de Dados
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     FRONTEND (React)                        │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
+│  │  Dashboard   │  │  Formulário  │  │  SI-PNI      │      │
+│  │  (Tabela)    │  │  (CRUD)      │  │  (Cobertura) │      │
+│  └──────────────┘  └──────────────┘  └──────────────┘      │
+│         ↓                  ↓                  ↓              │
+│  http://localhost:3000 - Axios HTTP Requests               │
+└──────────────────────────────┬──────────────────────────────┘
+                               ↓
+┌──────────────────────────────────────────────────────────────┐
+│                   BACKEND (Spring Boot)                      │
+│  http://localhost:8080/api                                   │
+│                                                              │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │              CONTROLLER LAYER                        │   │
+│  │  ┌──────────────────┐  ┌──────────────────────┐    │   │
+│  │  │RegistroVacinacao│  │ SIPNIController      │    │   │
+│  │  │ Controller       │  │ (SI-PNI/Datasus)     │    │   │
+│  │  └────────┬─────────┘  └──────────┬───────────┘    │   │
+│  └───────────┼───────────────────────┼────────────────┘   │
+│              ↓                        ↓                     │
+│  ┌──────────────────────────────────────────────────┐     │
+│  │              SERVICE LAYER                       │     │
+│  │  ┌────────────────────────────────────────────┐ │     │
+│  │  │RegistroVacinacaoService                   │ │     │
+│  │  │ - Lógica de CRUD                          │ │     │
+│  │  │ - Carregamento CSV (OpenCSV)              │ │     │
+│  │  │ - Filtros especializados                  │ │     │
+│  │  └────────────────────────────────────────────┘ │     │
+│  │  ┌────────────────────────────────────────────┐ │     │
+│  │  │ SIPNIService                               │ │     │
+│  │  │ - Integração com API Datasus              │ │     │
+│  │  │ - Cache de requisições                    │ │     │
+│  │  │ - Processamento de cobertura              │ │     │
+│  │  └────────────────────────────────────────────┘ │     │
+│  └────────────────┬──────────────────────┬──────────┘     │
+│                   ↓                      ↓                 │
+│  ┌──────────────────────────────────────────────────┐     │
+│  │              REPOSITORY LAYER                    │     │
+│  │  ┌────────────────────────────────────────────┐ │     │
+│  │  │RegistroVacinacaoRepository                │ │     │
+│  │  │ extends JpaRepository<RegistroVacinacao>  │ │     │
+│  │  │ - findByVacina()                          │ │     │
+│  │  │ - findByEstado()                          │ │     │
+│  │  │ - Custom Queries                          │ │     │
+│  │  └────────────────────────────────────────────┘ │     │
+│  │  ┌────────────────────────────────────────────┐ │     │
+│  │  │ VacinaRepository                          │ │     │
+│  │  │ extends JpaRepository<Vacina>             │ │     │
+│  │  │ - Queries especializadas                  │ │     │
+│  │  └────────────────────────────────────────────┘ │     │
+│  └────────────────┬──────────────────────┬──────────┘     │
+│                   ↓                      ↓                 │
+└───────────────────┼──────────────────────┼────────────────┘
+                    ↓                      ↓
+        ┌──────────────────────┐  ┌──────────────────────┐
+        │   H2 Database        │  │   SI-PNI API         │
+        │   (Em Memória)       │  │   (Dados Reais)      │
+        │                      │  │                      │
+        │ - REGISTRO_VACINACAO │  │ - Cobertura Vacinal  │
+        │ - VACINA             │  │ - Por Estado         │
+        │ - ... (Tabelas)      │  │ - Por Município      │
+        └──────────────────────┘  └──────────────────────┘
+```
+
+### Componentes Principais
+
+1. **Frontend React** - Interface com usuário
+   - Dashboard com tabela de registros
+   - Formulário de inserção
+   - Importador CSV
+   - Visualizador SI-PNI
+
+2. **Controller** - Camada HTTP/REST
+   - Recebe requisições do frontend
+   - Valida entrada
+   - Chama service
+
+3. **Service** - Lógica de Negócio
+   - CRUD operations
+   - Leitura de CSV
+   - Integração com SI-PNI
+   - Cache e processamento
+
+4. **Repository** - Acesso a Dados
+   - Queries JPA
+   - Métodos especializados
+   - Transações com BD
+
+5. **Database H2** - Persistência
+   - Banco em memória
+   - Resetado ao reiniciar
+   - Acessível via H2-Console
+
+---
+
+## 🚀 Guia de Execução
+
+### Pré-requisitos
+
+Certifique-se de ter instalado:
+- **Java 17+** (`java -version`)
+- **Maven 3.8+** (`mvn -version`)
+- **Node.js 16+** e **npm** (`node -version` e `npm -version`)
+
+### Executar o Projeto
+
+#### **1. Backend (Terminal 1)**
+
+```bash
+# Navegue até a raiz do projeto
+cd /caminho/para/Projeto-Imunidata
+
+# Compile e rode
+mvn clean install
+mvn spring-boot:run
+```
+
+✅ Backend estará em: **http://localhost:8080/api**
+
+Aguarde pela mensagem:
+```
+Started ImunidataApplication in X.XXX seconds
+```
+
+#### **2. Frontend (Terminal 2)**
+
+```bash
+# Navegue até frontend
+cd /caminho/para/Projeto-Imunidata/frontend
+
+# Instale dependências
+npm install
+
+# Rode a aplicação
+npm start
+```
+
+✅ Frontend estará em: **http://localhost:3000**
+
+### Acessar a Aplicação
+
+Abra o navegador e acesse: **http://localhost:3000**
+
+Você verá 4 abas:
+- 📊 **Dashboard** - Tabela com registros
+- ➕ **Novo Registro** - Formulário CRUD
+- 📤 **Importar CSV** - Carregar dados
+- 🔗 **SI-PNI / Datasus** - Cobertura vacinal
+
+---
+
+## 💾 Acessar o H2 Console
+
+O H2 Console permite visualizar e consultar os dados do banco diretamente.
+
+### URL
+```
+http://localhost:8080/api/h2-console
+```
+
+### Configurações de Conexão
+- **JDBC URL:** `jdbc:h2:mem:imunidatadb`
+- **User Name:** `sa`
+- **Password:** (deixar vazio)
+
+### Consultas Úteis
+
+```sql
+-- Listar todos os registros de vacinação
+SELECT * FROM REGISTRO_VACINACAO;
+
+-- Contar registros por vacina
+SELECT VACINA, COUNT(*) as TOTAL 
+FROM REGISTRO_VACINACAO 
+GROUP BY VACINA;
+
+-- Registros por estado
+SELECT ESTADO, COUNT(*) as TOTAL 
+FROM REGISTRO_VACINACAO 
+GROUP BY ESTADO;
+
+-- Cobertura média por estado
+SELECT ESTADO, 
+       VACINA, 
+       COUNT(*) as REGISTROS,
+       SUM(QUANTIDADE_APLICADA) as TOTAL_APLICADO
+FROM REGISTRO_VACINACAO
+GROUP BY ESTADO, VACINA
+ORDER BY ESTADO;
+```
+
+---
+
+## 📚 Estrutura de Pastas
+
+```
+Projeto-Imunidata/
+├── src/main/java/com/imunidata/
+│   ├── model/                    # Entidades JPA (@Entity)
+│   │   ├── RegistroVacinacao.java
+│   │   └── Vacina.java
+│   ├── dto/                      # Data Transfer Objects
+│   │   └── CoberturavacinadalDTO.java
+│   ├── repository/               # Interfaces JpaRepository
+│   │   ├── RegistroVacinacaoRepository.java
+│   │   └── VacinaRepository.java
+│   ├── service/                  # Lógica de Negócio
+│   │   ├── RegistroVacinacaoService.java
+│   │   └── SIPNIService.java
+│   ├── controller/               # Endpoints REST
+│   │   ├── RegistroVacinacaoController.java
+│   │   └── SIPNIController.java
+│   ├── config/                   # Configurações
+│   │   ├── DataLoaderConfig.java
+│   │   └── CacheConfig.java
+│   └── ImunidataApplication.java # Classe Principal
+├── src/main/resources/
+│   ├── application.properties    # Configuração Spring
+│   └── dados_vacinacao.csv       # Dados de exemplo
+├── frontend/                     # Aplicação React
+│   ├── src/
+│   │   ├── components/           # Componentes React
+│   │   │   ├── Dashboard.js
+│   │   │   ├── FormularioInsercao.js
+│   │   │   └── SIPNI.js
+│   │   ├── services/
+│   │   │   └── registroAPI.js    # Serviço Axios
+│   │   ├── App.js
+│   │   └── index.js
+│   ├── public/
+│   │   └── index.html
+│   └── package.json
+├── pom.xml                       # Dependências Maven
+├── INSTALACAO.md                 # Guia de Instalação
+├── SIPNI_GUIDE.md                # Documentação SI-PNI
+└── README.md                     # Este arquivo
+```
+
+---
+
+## 📦 Dependências Principais
+
+### Backend
+- **Spring Boot 3.1.5** - Framework web
+- **Spring Data JPA** - ORM
+- **H2 Database** - Banco de dados
+- **OpenCSV 5.7** - Leitura de CSV
+- **Lombok** - Redução de boilerplate
+- **Maven** - Gerenciador de dependências
+
+### Frontend
+- **React 18.2.0** - UI Framework
+- **Axios 1.4.0** - HTTP Client
+- **React Router 6.14.0** - Roteamento
+- **npm** - Gerenciador de pacotes
+
+---
+
+## ✅ Funcionalidades Implementadas
+
+- [x] Arquitetura em camadas (Model, Repository, Service, Controller)
+- [x] Entidade RegistroVacinacao com todos os atributos
+- [x] Repository com métodos de busca especializados
+- [x] Service com lógica de negócio
+- [x] CRUD completo (Create, Read, Update, Delete)
+- [x] Banco H2 com console Web
+- [x] Carregamento automático de dados CSV
+- [x] Controller REST com endpoints completos
+- [x] Dashboard React com tabela e filtros
+- [x] Formulário de inserção de registros
+- [x] Importador de CSV
+- [x] Integração SI-PNI / Datasus
+- [x] Busca de cobertura vacinal
+- [x] CORS habilitado
+- [x] Tratamento de erros adequado
+- [x] Status HTTP corretos (200, 201, 404, etc)
+
+---
+
+## 📝 Notas Importantes
+
+- O banco de dados H2 é **em memória** e será **resetado ao reiniciar** a aplicação
+- Os dados CSV são **automaticamente carregados** ao iniciar o backend
+- O frontend se conecta ao backend via **http://localhost:8080/api**
+- O projeto utiliza **CORS aberto** para desenvolvimento
+- A API SI-PNI está **simulada com dados reais** para testes
 
 ## 🎯 Objetivos
 

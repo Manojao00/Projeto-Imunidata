@@ -11,6 +11,14 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CoberturavacinadalDTO {
     private String codigoMunicipio;
+    private String nomeUfPaciente;
+    private String nomeMunicipioPaciente;
+    private String numeroIdadePaciente;
+    private String siglaVacina;
+    private String descricaoTipoEstabelecimento;
+    private String descricaoVacina;
+    private String tipoSexoPaciente;
+    private String dataVacina;
     private String nomeMunicipio;
     private String estado;
     private String vacina;

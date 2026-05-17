@@ -10,7 +10,7 @@ function FormularioInsercao({ onSucesso }) {
     dose: '1ª',
     quantidadeAplicada: '',
     dataRegistro: '',
-    faixaEtaria: '0-4',
+    idade: '0-4',
   });
 
   const [carregando, setCarregando] = useState(false);
@@ -62,7 +62,7 @@ function FormularioInsercao({ onSucesso }) {
         dose: '1ª',
         quantidadeAplicada: '',
         dataRegistro: '',
-        faixaEtaria: '0-4',
+        idade: '0-4',
       });
 
       // Callback para atualizar a lista
@@ -181,10 +181,10 @@ function FormularioInsercao({ onSucesso }) {
         </div>
 
         <div className="form-grupo">
-          <label htmlFor="faixaEtaria">Faixa Etária</label>
+          <label htmlFor="idade">Idade</label>
           <select
-            id="faixaEtaria"
-            name="faixaEtaria"
+            id="idade"
+            name="idade"
             value={formData.faixaEtaria}
             onChange={handleChange}
           >

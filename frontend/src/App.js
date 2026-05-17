@@ -115,7 +115,7 @@ function App() {
                     <span>Clique aqui ou arraste um arquivo CSV</span>
                   </label>
                   <p className="formato-esperado">
-                    Formato esperado: municipio, estado, vacina, dose, quantidadeAplicada, dataRegistro (dd/MM/yyyy), faixaEtaria
+                    Formato esperado: municipio, estado, vacina, dose, quantidadeAplicada, dataRegistro (dd/MM/yyyy), idade — Também aceita CSV do Datasus (separado por ponto-e-vírgula)
                   </p>
                 </div>
               </div>

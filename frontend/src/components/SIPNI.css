@@ -256,3 +256,23 @@
     font-size: 9px;
   }
 }
+
+/* ── Stats row ── */
+.sipni-stats-row { display: flex; gap: 16px; margin: 16px 0; flex-wrap: wrap; }
+.sipni-stat-card { background: #f0f7ff; border: 1px solid #bbdefb; border-radius: 10px;
+                   padding: 14px 24px; text-align: center; flex: 1; min-width: 120px; }
+.sipni-stat-card .stat-label { display: block; font-size: 12px; color: #1565c0; margin-bottom: 4px; }
+.sipni-stat-card strong { font-size: 24px; color: #0d47a1; }
+
+/* ── Filtros locais ── */
+.sipni-filtros-locais { display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+                        background: #fffde7; border: 1px solid #fff176; border-radius: 8px;
+                        padding: 10px 14px; margin: 12px 0; }
+.contagem-filtro { font-size: 13px; color: #555; margin-left: auto; }
+
+/* ── Badge UF ── */
+.badge-uf { background: #1976d2; color: #fff; padding: 2px 8px;
+            border-radius: 4px; font-size: 12px; font-weight: 700; }
+
+/* ── Vacina desc ── */
+.vacina-desc { color: #666; font-size: 11px; }

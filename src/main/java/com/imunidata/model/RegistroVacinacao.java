@@ -38,20 +38,7 @@ public class RegistroVacinacao {
     @Column(nullable = false)
     private LocalDate dataRegistro;
 
+    // Renomeado de faixaEtaria → idade
     @Column
-    private String faixaEtaria;
-
-    @Override
-    public String toString() {
-        return "RegistroVacinacao{" +
-                "id=" + id +
-                ", municipio='" + municipio + '\'' +
-                ", estado='" + estado + '\'' +
-                ", vacina='" + vacina + '\'' +
-                ", dose='" + dose + '\'' +
-                ", quantidadeAplicada=" + quantidadeAplicada +
-                ", dataRegistro=" + dataRegistro +
-                ", faixaEtaria='" + faixaEtaria + '\'' +
-                '}';
-    }
+    private String idade;
 }

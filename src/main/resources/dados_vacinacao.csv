@@ -1,4 +1,4 @@
-municipio,estado,vacina,dose,quantidadeAplicada,dataRegistro,faixaEtaria
+municipio,estado,vacina,dose,quantidadeAplicada,dataRegistro,idade
 São Paulo,SP,BCG,1ª,1500,01/01/2024,0-4
 Rio de Janeiro,RJ,BCG,1ª,1200,02/01/2024,0-4
 Belo Horizonte,MG,BCG,1ª,900,03/01/2024,0-4

@@ -168,3 +168,28 @@
     padding: 8px 10px;
   }
 }
+
+/* ── Abas do Dashboard ── */
+.dashboard-abas { display: flex; gap: 8px; margin: 16px 0 0; border-bottom: 2px solid #e0e0e0; }
+.aba-btn { background: #f5f5f5; border: none; border-bottom: 3px solid transparent;
+           padding: 10px 20px; cursor: pointer; font-size: 14px; font-weight: 500;
+           color: #555; transition: all .2s; border-radius: 6px 6px 0 0; }
+.aba-btn:hover { background: #e8f4fd; color: #1976d2; }
+.aba-btn.ativo { background: #fff; border-bottom: 3px solid #1976d2; color: #1976d2; font-weight: 700; }
+
+/* ── Stats row ── */
+.dashboard-stats { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 6px; }
+.stat-badge { background: #e3f2fd; color: #1565c0; padding: 4px 12px;
+              border-radius: 20px; font-size: 13px; }
+
+/* ── Badges ── */
+.badge-estado { background: #1976d2; color: #fff; padding: 2px 8px;
+                border-radius: 4px; font-size: 12px; font-weight: 700; }
+
+/* ── Botão atualizar ── */
+.btn-atualizar { background: #388e3c; color: white; border: none;
+                 padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+.btn-atualizar:hover { background: #2e7d32; }
+
+/* ── Mensagens ── */
+.carregando-msg, .sem-dados-msg { text-align: center; padding: 40px; color: #888; font-size: 15px; }

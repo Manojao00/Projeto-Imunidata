@@ -175,6 +175,7 @@ public class SIPNIService {
                             .descricao_tipo_estabelecimento(
                                     texto(item, "descricao_tipo_estabelecimento"))
                             .tipo_sexo_paciente(texto(item, "tipo_sexo_paciente"))
+                            .descricao_dose_vacina(texto(item, "descricao_dose_vacina"))
                             .data_vacina(dataVacina)
                             // campos derivados para o frontend
                             .estado(siglaUf)           // "SP" — usado nos filtros do front

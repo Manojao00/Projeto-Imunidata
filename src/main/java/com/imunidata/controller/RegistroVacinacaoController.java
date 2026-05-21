@@ -4,12 +4,14 @@ import com.imunidata.model.RegistroVacinacao;
 import com.imunidata.service.RegistroVacinacaoService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,7 +42,7 @@ public class RegistroVacinacaoController {
 
     @PutMapping("/{id}")
     public ResponseEntity<RegistroVacinacao> atualizar(@PathVariable Long id,
-                                                       @RequestBody RegistroVacinacao registro) {
+                                                        @RequestBody RegistroVacinacao registro) {
         try { return ResponseEntity.ok(service.atualizar(id, registro)); }
         catch (IllegalArgumentException e) { return ResponseEntity.notFound().build(); }
     }
@@ -66,7 +68,6 @@ public class RegistroVacinacaoController {
         return ResponseEntity.ok(service.buscarPorMunicipio(nome));
     }
 
-    // Mantido para compatibilidade, agora chama buscarPorIdade
     @GetMapping("/buscar/faixa-etaria")
     public ResponseEntity<List<RegistroVacinacao>> buscarPorFaixaEtaria(@RequestParam String faixa) {
         return ResponseEntity.ok(service.buscarPorIdade(faixa));
@@ -78,9 +79,28 @@ public class RegistroVacinacaoController {
     }
 
     @GetMapping("/buscar/estado-vacina")
-    public ResponseEntity<List<RegistroVacinacao>> buscarPorEstadoEVacina(@RequestParam String estado,
-                                                                           @RequestParam String vacina) {
+    public ResponseEntity<List<RegistroVacinacao>> buscarPorEstadoEVacina(
+            @RequestParam String estado, @RequestParam String vacina) {
         return ResponseEntity.ok(service.buscarPorEstadoEVacina(estado, vacina));
+    }
+
+    /** GET /api/registros/buscar/data?data=2024-01-15 */
+    @GetMapping("/buscar/data")
+    public ResponseEntity<List<RegistroVacinacao>> buscarPorData(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {
+        return ResponseEntity.ok(service.buscarPorData(data));
+    }
+
+    /**
+     * GET /api/registros/buscar/periodo?inicio=2024-01-01&fim=2024-12-31&estado=SP
+     * estado é opcional
+     */
+    @GetMapping("/buscar/periodo")
+    public ResponseEntity<List<RegistroVacinacao>> buscarPorPeriodo(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim,
+            @RequestParam(required = false) String estado) {
+        return ResponseEntity.ok(service.buscarPorPeriodoEEstado(inicio, fim, estado));
     }
 
     @PostMapping("/carregar-csv")
@@ -88,10 +108,9 @@ public class RegistroVacinacaoController {
         if (arquivo.isEmpty()) return ResponseEntity.badRequest().body("Arquivo CSV vazio");
         try {
             List<RegistroVacinacao> registros = service.carregarDadosCSV(arquivo.getInputStream());
-            log.info("CSV importado via endpoint: {} registros", registros.size());
+            log.info("CSV importado: {} registros", registros.size());
             return ResponseEntity.status(HttpStatus.CREATED).body(registros);
         } catch (IOException e) {
-            log.error("Erro ao ler CSV: {}", e.getMessage());
             return ResponseEntity.badRequest().body("Erro ao processar CSV: " + e.getMessage());
         }
     }

@@ -131,7 +131,7 @@ function App() {
       </div>
 
       <footer className="app-footer">
-        <p>&copy; 2024 Imunidata - Sistema de Análise de Cobertura Vacinal | Desenvolvido para apoiar a tomada de decisão em saúde pública</p>
+        <p>&copy; 2026 Imunidata - Sistema de Análise de Cobertura Vacinal | Desenvolvido para apoiar a tomada de decisão em saúde pública</p>
       </footer>
     </div>
   );

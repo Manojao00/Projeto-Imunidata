@@ -1,26 +1,26 @@
 municipio,estado,vacina,dose,quantidadeAplicada,dataRegistro,idade
-São Paulo,SP,BCG,1ª,1500,01/01/2024,0-4
-Rio de Janeiro,RJ,BCG,1ª,1200,02/01/2024,0-4
-Belo Horizonte,MG,BCG,1ª,900,03/01/2024,0-4
-Brasília,DF,BCG,1ª,800,04/01/2024,0-4
-Salvador,BA,BCG,1ª,700,05/01/2024,0-4
-São Paulo,SP,Gripe,1ª,2000,06/01/2024,5-9
-Rio de Janeiro,RJ,Gripe,1ª,1800,07/01/2024,5-9
-Belo Horizonte,MG,Gripe,1ª,1600,08/01/2024,5-9
-Brasília,DF,Gripe,1ª,1400,09/01/2024,5-9
-Salvador,BA,Gripe,1ª,1200,10/01/2024,5-9
-São Paulo,SP,Poliomielite,2ª,1800,11/01/2024,0-4
-Rio de Janeiro,RJ,Poliomielite,2ª,1600,12/01/2024,0-4
-Belo Horizonte,MG,Poliomielite,2ª,1400,13/01/2024,0-4
-Brasília,DF,Poliomielite,2ª,1200,14/01/2024,0-4
-Salvador,BA,Poliomielite,2ª,1000,15/01/2024,0-4
-São Paulo,SP,Sarampo,1ª,1900,16/01/2024,10-14
-Rio de Janeiro,RJ,Sarampo,1ª,1700,17/01/2024,10-14
-Belo Horizonte,MG,Sarampo,1ª,1500,18/01/2024,10-14
-Brasília,DF,Sarampo,1ª,1300,19/01/2024,10-14
-Salvador,BA,Sarampo,1ª,1100,20/01/2024,10-14
-São Paulo,SP,Difteria,reforço,1600,21/01/2024,15-19
-Rio de Janeiro,RJ,Difteria,reforço,1400,22/01/2024,15-19
-Belo Horizonte,MG,Difteria,reforço,1200,23/01/2024,15-19
-Brasília,DF,Difteria,reforço,1000,24/01/2024,15-19
-Salvador,BA,Difteria,reforço,800,25/01/2024,15-19
+São Paulo,SP,BCG,1ª,1500,01/01/2026,0-4
+Rio de Janeiro,RJ,BCG,1ª,1200,02/01/2026,0-4
+Belo Horizonte,MG,BCG,1ª,900,03/01/2026,0-4
+Brasília,DF,BCG,1ª,800,04/01/2026,0-4
+Salvador,BA,BCG,1ª,700,05/01/2026,0-4
+São Paulo,SP,Gripe,1ª,2000,06/01/2026,5-9
+Rio de Janeiro,RJ,Gripe,1ª,1800,07/01/2026,5-9
+Belo Horizonte,MG,Gripe,1ª,1600,08/01/2026,5-9
+Brasília,DF,Gripe,1ª,1400,09/01/2026,5-9
+Salvador,BA,Gripe,1ª,1200,10/01/2026,5-9
+São Paulo,SP,Poliomielite,2ª,1800,11/01/2026,0-4
+Rio de Janeiro,RJ,Poliomielite,2ª,1600,12/01/2026,0-4
+Belo Horizonte,MG,Poliomielite,2ª,1400,13/01/2026,0-4
+Brasília,DF,Poliomielite,2ª,1200,14/01/2026,0-4
+Salvador,BA,Poliomielite,2ª,1000,15/01/2026,0-4
+São Paulo,SP,Sarampo,1ª,1900,16/01/2026,10-14
+Rio de Janeiro,RJ,Sarampo,1ª,1700,17/01/2026,10-14
+Belo Horizonte,MG,Sarampo,1ª,1500,18/01/2026,10-14
+Brasília,DF,Sarampo,1ª,1300,19/01/2026,10-14
+Salvador,BA,Sarampo,1ª,1100,20/01/2026,10-14
+São Paulo,SP,Difteria,reforço,1600,21/01/2026,15-19
+Rio de Janeiro,RJ,Difteria,reforço,1400,22/01/2026,15-19
+Belo Horizonte,MG,Difteria,reforço,1200,23/01/2026,15-19
+Brasília,DF,Difteria,reforço,1000,24/01/2026,15-19
+Salvador,BA,Difteria,reforço,800,25/01/2026,15-19
